@@ -72,6 +72,10 @@ class CryptoQuote::CLI
 		puts table2
 	end
 
+	def currency_format(number)
+		number.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse.insert(0, "$")
+	end
+
 	def goodbye
 		puts "Thank you for using Crypto Quote!"
 	end
