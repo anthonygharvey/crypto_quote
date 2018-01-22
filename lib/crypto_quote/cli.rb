@@ -59,13 +59,21 @@ class CryptoQuote::CLI
 	def crypto_detail(input)
 		c = ticker[input.to_i - 1]
 		available_percent = ((c['available_supply'].to_f / c['max_supply'].to_f)*100).round(2)
+
+		price = currency_format(c['price_usd'])
+		market_cap = currency_format(c['market_cap_usd'])
+		daily_vol = currency_format(c['24h_volume_usd'])
+		available_supply = currency_format(c['available_supply'])
+		max_supply = currency_format(c['max_supply'])
+		
+
 		row1 = []
-		row1 << [ c['symbol'], c['price_usd'], c['percent_change_1h']+'%', c['percent_change_24h']+'%', c['percent_change_7d']+'%' ]
+		row1 << [ c['symbol'], price, c['percent_change_1h']+'%', c['percent_change_24h']+'%', c['percent_change_7d']+'%' ]
 		table1 = Terminal::Table.new :title => "#{c['name']} Details", :headings => ['Symbol', 'Price', '1 Hr %', '24 Hr %', '7 Day %'], :rows => row1
 		
 		
 		row2 = []
-		row2 << [ c['market_cap_usd'], c['24h_volume_usd'], c['available_supply'], c['max_supply'], "#{available_percent} %"]
+		row2 << [ market_cap, daily_vol, available_supply, max_supply, "#{available_percent} %"]
 		table2 = Terminal::Table.new :title => "#{c['name']} Market Information", :headings => ['Market Cap', '24 Hr Volume', 'Avaiable Supply', 'Total Supply', 'Available %'], :rows => row2
 
 		puts table1
