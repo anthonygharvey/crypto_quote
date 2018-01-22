@@ -39,8 +39,7 @@ class CryptoQuote::CLI
 				list_crypto_currencies
 				get_selection_input
 			else
-				puts ticker[input.to_i - 1]["name"]
-				binding.pry
+				crypto_detail(input)
 			end
 		end
 	end
@@ -55,6 +54,22 @@ class CryptoQuote::CLI
 
 	def valid_input?(input)
 		input == "exit" || input == "l" || input == "list" || (input.to_i > 0 && input.to_i <= ticker_count) ? true : false
+	end
+
+	def crypto_detail(input)
+		c = ticker[input.to_i - 1]
+		available_percent = ((c['available_supply'].to_f / c['max_supply'].to_f)*100).round(2)
+		row1 = []
+		row1 << [ c['symbol'], c['price_usd'], c['percent_change_1h']+'%', c['percent_change_24h']+'%', c['percent_change_7d']+'%' ]
+		table1 = Terminal::Table.new :title => "#{c['name']} Details", :headings => ['Symbol', 'Price', '1 Hr %', '24 Hr %', '7 Day %'], :rows => row1
+		
+		
+		row2 = []
+		row2 << [ c['market_cap_usd'], c['24h_volume_usd'], c['available_supply'], c['max_supply'], "#{available_percent} %"]
+		table2 = Terminal::Table.new :title => "#{c['name']} Market Information", :headings => ['Market Cap', '24 Hr Volume', 'Avaiable Supply', 'Total Supply', 'Available %'], :rows => row2
+
+		puts table1
+		puts table2
 	end
 
 	def goodbye
