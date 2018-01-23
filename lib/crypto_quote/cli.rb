@@ -15,7 +15,11 @@ class CryptoQuote::CLI
 	def list_crypto_currencies
 		rows = []
 		puts ""
-		self.ticker.each{|c| rows << [c['rank'], c["symbol"], c["name"], currency_format(c['price_usd']), c['percent_change_1h']+"%", c['percent_change_24h']+"%"]}
+		self.ticker.each do |c| 
+			one_hour = (c['percent_change_1h'][0] == '-' ? c['percent_change_1h'].red : c['percent_change_1h'].green)
+			twenty_four_hour = (c['percent_change_24h'][0] == '-' ? c['percent_change_24h'].red : c['percent_change_24h'].green)
+			rows << [c['rank'], c["symbol"], c["name"], currency_format(c['price_usd']), one_hour+"%", twenty_four_hour+"%"]
+		end
 		table = Terminal::Table.new :title => "Crypto Quotes", :headings => ['Rank', 'Ticker', 'Name', 'Price', '1 Hr %', '24 Hr %'], :rows => rows
 		puts table
 		puts ""
@@ -79,9 +83,12 @@ class CryptoQuote::CLI
 		available_supply = currency_format(c['available_supply']).gsub(".0", "")
 		max_supply = c['max_supply']!=nil ? currency_format(c['max_supply']).gsub(".0", "") : "N/A"
 		available_percent = max_supply=="N/A" ? "N/A" : ((c['available_supply'].to_f / c['max_supply'].to_f)*100).round(2)
-		
+		one_hour = (c['percent_change_1h'][0] == '-' ? c['percent_change_1h'].red : c['percent_change_1h'].green)
+		twenty_four_hour = (c['percent_change_24h'][0] == '-' ? c['percent_change_24h'].red : c['percent_change_24h'].green)
+		seven_days = (c['percent_change_7d'][0] == '-' ? c['percent_change_7d'].red : c['percent_change_7d'].green)
+
 		row1 = []
-		row1 << [ c['symbol'], price, c['percent_change_1h']+'%', c['percent_change_24h']+'%', c['percent_change_7d']+'%' ]
+		row1 << [ c['symbol'], price, one_hour+'%', twenty_four_hour+'%', seven_days+'%' ]
 		table1 = Terminal::Table.new :title => "#{c['name']} Details", :headings => ['Symbol', 'Price', '1 Hr %', '24 Hr %', '7 Day %'], :rows => row1		
 		
 		row2 = []
