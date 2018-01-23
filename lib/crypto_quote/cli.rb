@@ -61,10 +61,10 @@ class CryptoQuote::CLI
 		available_percent = ((c['available_supply'].to_f / c['max_supply'].to_f)*100).round(2)
 
 		price = currency_format(c['price_usd'])
-		market_cap = currency_format(c['market_cap_usd'])
-		daily_vol = currency_format(c['24h_volume_usd'])
-		available_supply = currency_format(c['available_supply'])
-		max_supply = currency_format(c['max_supply'])
+		market_cap = currency_format(c['market_cap_usd']).gsub(".0", "")
+		daily_vol = currency_format(c['24h_volume_usd']).gsub(".0", "")
+		available_supply = currency_format(c['available_supply']).gsub(".0", "")
+		max_supply = currency_format(c['max_supply']).gsub(".0", "")
 		
 
 		row1 = []
@@ -73,15 +73,15 @@ class CryptoQuote::CLI
 		
 		
 		row2 = []
-		row2 << [ market_cap, daily_vol, available_supply, max_supply, "#{available_percent} %"]
+		row2 << [ market_cap, daily_vol, available_supply, max_supply, "#{available_percent}%"]
 		table2 = Terminal::Table.new :title => "#{c['name']} Market Information", :headings => ['Market Cap', '24 Hr Volume', 'Avaiable Supply', 'Total Supply', 'Available %'], :rows => row2
-
+		binding.pry
 		puts table1
 		puts table2
 	end
 
 	def currency_format(number)
-		number.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse.insert(0, "$")
+		number.gsub('.00','').reverse.scan(/(\d*\.\d{1,3}|\d{1,3})/).join(',').reverse.insert(0, "$")
 	end
 
 	def goodbye
