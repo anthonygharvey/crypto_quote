@@ -80,8 +80,8 @@ class CryptoQuote::CLI
 		price = currency_format(c['price_usd'])
 		market_cap = currency_format(c['market_cap_usd']).gsub(".0", "")
 		daily_vol = currency_format(c['24h_volume_usd']).gsub(".0", "")
-		available_supply = currency_format(c['available_supply']).gsub(".0", "")
-		max_supply = c['max_supply']!=nil ? currency_format(c['max_supply']).gsub(".0", "") : "N/A"
+		available_supply = currency_format(c['available_supply']).gsub(".0", "").gsub("$", "")
+		max_supply = c['max_supply']!=nil ? currency_format(c['max_supply']).gsub(".0", "").gsub("$", "") : "N/A"
 		available_percent = max_supply=="N/A" ? "N/A" : ((c['available_supply'].to_f / c['max_supply'].to_f)*100).round(2)
 		one_hour = (c['percent_change_1h'][0] == '-' ? c['percent_change_1h'].red : c['percent_change_1h'].green)
 		twenty_four_hour = (c['percent_change_24h'][0] == '-' ? c['percent_change_24h'].red : c['percent_change_24h'].green)
