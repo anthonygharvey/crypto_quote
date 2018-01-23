@@ -12,19 +12,14 @@ class CryptoQuote::CLI
 		puts "Welcome to the Cryto Quote App."
 		puts "The quotes are from http://coinmarketcap.com and are delayed by 15 minutes."
 	end
-	
-	# | Rank		| Ticker  | Name		  | Price      | % 1 Hour | % 24 Hours |
-	# | --------| --------| --------  | -----------|----------| -----------|
-	# | 1				|	BTC			|	Bitcoin	  |	$10,730.7	 | 1.1%			|	-6.73%     |
-	# | 2				|	ETH			|	Ethereum	|	$987.32		 | 1.6%			|	-5.32%		 |
-	
 
 	def list_crypto_currencies
 		puts "type the number of the crypto currency to see more information"
 		puts "Type exit to exit"
+		# binding.pry
 		rows = []
 		puts ""
-		self.ticker.each{|c| rows << [c['rank'], c["symbol"], c["name"], c['price_usd'], c['percent_change_1h']+"%", c['percent_change_24h']+"%"]}
+		self.ticker.each{|c| rows << [c['rank'], c["symbol"], c["name"], currency_format(c['price_usd']), c['percent_change_1h']+"%", c['percent_change_24h']+"%"]}
 		table = Terminal::Table.new :title => "Crypto Quotes", :headings => ['Rank', 'Ticker', 'Name', 'Price', '1 Hr %', '24 Hr %'], :rows => rows
 		puts table
 	end
@@ -64,7 +59,7 @@ class CryptoQuote::CLI
 		market_cap = currency_format(c['market_cap_usd']).gsub(".0", "")
 		daily_vol = currency_format(c['24h_volume_usd']).gsub(".0", "")
 		available_supply = currency_format(c['available_supply']).gsub(".0", "")
-		max_supply = currency_format(c['max_supply']).gsub(".0", "")
+		max_supply = c['max_supply']!=nil ? currency_format(c['max_supply']).gsub(".0", "") : "N/A"
 		
 
 		row1 = []
@@ -75,13 +70,17 @@ class CryptoQuote::CLI
 		row2 = []
 		row2 << [ market_cap, daily_vol, available_supply, max_supply, "#{available_percent}%"]
 		table2 = Terminal::Table.new :title => "#{c['name']} Market Information", :headings => ['Market Cap', '24 Hr Volume', 'Avaiable Supply', 'Total Supply', 'Available %'], :rows => row2
-		binding.pry
+
 		puts table1
 		puts table2
 	end
 
 	def currency_format(number)
-		number.gsub('.00','').reverse.scan(/(\d*\.\d{1,3}|\d{1,3})/).join(',').reverse.insert(0, "$")
+		if number != nil
+			number.gsub('.00','').reverse.scan(/(\d*\.\d{1,3}|\d{1,3})/).join(',').reverse.insert(0, "$")
+		else
+			0
+		end
 	end
 
 	def goodbye
