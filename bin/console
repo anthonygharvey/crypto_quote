@@ -10,5 +10,10 @@ require "crypto_quote"
 # require "pry"
 # Pry.start
 
+def reload!
+	load './lib/crypto_quote.rb'
+	load './lib/ticker.rb'
+end
+
 require "irb"
 IRB.start(__FILE__)
