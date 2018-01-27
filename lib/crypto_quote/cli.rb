@@ -1,6 +1,6 @@
 class CryptoQuote::CLI	
 	@@ticker = CryptoQuote::Ticker.new.data
-	@@current_crypto = nil
+	@@current_crypto = nil #TODO: refactor this class variable with readers and writers.
 
 	def call
 		welcome
