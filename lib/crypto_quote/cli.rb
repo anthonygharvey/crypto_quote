@@ -1,5 +1,6 @@
 class CryptoQuote::CLI	
 	@@ticker = CryptoQuote::Ticker.new.data
+	@@current_crypto = nil
 
 	def call
 		welcome
@@ -48,6 +49,7 @@ class CryptoQuote::CLI
 
 	def detailed_instructions
 		puts "Type l or list to go back to the main list."
+		puts "Type o or open to open the coinmarketcap.com url."
 		puts "Type exit to exit."
 		get_detailed_input
 	end
@@ -57,6 +59,8 @@ class CryptoQuote::CLI
 		if input == "exit"
 			goodbye
 			exit
+		elsif input == "o" || input == "open"
+			open_url
 		elsif input == "l" || input == "list"
 			list_crypto_currencies
 		end
@@ -76,6 +80,7 @@ class CryptoQuote::CLI
 
 	def crypto_detail(input)
 		c = ticker[input.to_i - 1]
+		@@current_crypto = c
 		
 		price = currency_format(c['price_usd'])
 		market_cap = currency_format(c['market_cap_usd']).gsub(".0", "")
@@ -97,6 +102,16 @@ class CryptoQuote::CLI
 
 		puts table1
 		puts table2
+	end
+
+	def update_current_crypto
+		@@current_crypto = c
+	end
+
+	def open_url
+		url = "https://coinmarketcap.com/currencies/" + @@current_crypto["id"]
+		`open #{url}`
+		detailed_instructions
 	end
 
 	def currency_format(number)
