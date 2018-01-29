@@ -95,16 +95,11 @@ class CryptoQuote::CLI
 		row2 << [ market_cap, daily_vol, available_supply, max_supply, "#{available_percent}%"]
 		table2 = Terminal::Table.new :title => "#{c['name']} Market Information", :headings => ['Market Cap', '24 Hr Volume', 'Avaiable Supply', 'Total Supply', 'Available %'], :rows => row2
 
-		puts table1
-		puts table2
+		puts table1, table2
 	end
 
 	def currency_format(number)
-		if number != nil
-			number.gsub('.00','').reverse.scan(/(\d*\.\d{1,3}|\d{1,3})/).join(',').reverse.insert(0, "$")
-		else
-			0
-		end
+		number != nil ? number.gsub('.00','').reverse.scan(/(\d*\.\d{1,3}|\d{1,3})/).join(',').reverse.insert(0, "$") : 0
 	end
 
 	def goodbye
