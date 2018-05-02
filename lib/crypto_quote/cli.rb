@@ -9,7 +9,7 @@ class CryptoQuote::CLI
 
 	def welcome
 		puts "Welcome to the Cryto Quote App."
-		puts "The quotes are from http://coinmarketcap.com and are delayed by 15 minutes."
+		puts "The quotes are from http://coinmarketcap.com and are delayed by 5 minutes."
 	end
 
 	def list_crypto_currencies
